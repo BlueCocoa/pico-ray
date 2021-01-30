@@ -1,9 +1,7 @@
-#ifdef _WIN32
-#include <windows.h>
-#endif
+#include <stdio.h>
+#include "pico/stdlib.h"
 #include <iostream>
 #include <cstring>
-//#include <unistd.h>
 #include "functions.h"
 #define PI 3.14159265358979323846
 using namespace std;
@@ -83,7 +81,7 @@ public:
 		for(int i=0;i<n;i++)
 		{
 			double diff[3];
-			vector(diff,origin,balls[i].center);
+			fvector(diff,origin,balls[i].center);
 			double discriminant=dot(unit,diff)*dot(unit,diff)+balls[i].radius*balls[i].radius-dot(diff,diff);
 			if(discriminant<0)	continue;
 			distance=-dot(unit,diff)-sqrt(discriminant);
@@ -138,20 +136,20 @@ public:
 			origin[2]+unit[2]*distance
 		};
 		double normal[3];
-		vector(normal,origin2,balls[index].center);
+		fvector(normal,origin2,balls[index].center);
 		normalize(normal);
 		double k=2*dot(unit,normal);
 		scale(normal,k);
 		double unit2[3];
-		vector(unit2,unit,normal);
-		if(limit=0)	return balls[index].color;
+		fvector(unit2,unit,normal);
+		if(limit==0)	return balls[index].color;
 		return (1-balls[index].coeff)*balls[index].color+balls[index].coeff*rayTrace(origin2,unit2,balls,n,altitute,coeff,limit-1);
 	}
 };
 
 int main()
 {
-    
+    stdio_init_all(); 
     //ball declaration::
     ball balls[3];
     balls[0].center[0]=0;
@@ -235,6 +233,7 @@ int main()
 		//update camera position
 		alfa+=0.03*PI;
 		if(beta>PI/20)beta-=0.03*PI;
+        //sleep_ms(0);
 	}
 	return 0;
 }
